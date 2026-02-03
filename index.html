@@ -13,7 +13,7 @@
 body {
     margin: 0;
     min-height: 100vh;
-    font-family: 'Arial', sans-serif;
+    font-family: Arial, sans-serif;
 
     background: linear-gradient(-45deg, #ffffff, #ffe6eb, #ffd6e0, #ffffff);
     background-size: 400% 400%;
@@ -27,7 +27,6 @@ body {
     overflow: hidden;
     overscroll-behavior: none;
     touch-action: none;
-
     padding: 20px;
 }
 
@@ -42,17 +41,12 @@ body {
     width: 100%;
     animation: fadeIn 1.5s ease;
     position: relative;
+    z-index: 5;
 }
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: scale(0.8);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
 }
 
 img {
@@ -68,7 +62,7 @@ h1 {
     margin-bottom: 10px;
 }
 
-/* Teks typing di bawah gambar */
+/* Teks typing */
 #typingText {
     font-size: 18px;
     min-height: 24px;
@@ -76,18 +70,7 @@ h1 {
     margin-bottom: 15px;
 }
 
-/* Efek cursor typing */
-.cursor {
-    display: inline-block;
-    animation: blink 1s infinite;
-}
-
-@keyframes blink {
-    0% { opacity: 1; }
-    50% { opacity: 0; }
-    100% { opacity: 1; }
-}
-
+/* Tombol */
 .buttons {
     display: flex;
     flex-direction: column;
@@ -114,12 +97,14 @@ button {
     background-color: #ef9a9a;
 }
 
+/* LOVE RAIN */
 .heart {
     position: fixed;
     top: -10px;
     animation: fall linear infinite;
     color: red;
     pointer-events: none;
+    z-index: 1;
 }
 
 @keyframes fall {
@@ -132,6 +117,47 @@ button {
         opacity: 0;
     }
 }
+
+/* CAT3 LOMPAT */
+.jumpCat {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    animation: jump 1s infinite ease-in-out;
+    z-index: 3;
+}
+
+@keyframes jump {
+    0% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(-80px); }
+    100% { transform: translateX(-50%) translateY(0); }
+}
+
+/* CAT4 HIASAN */
+.floatCat {
+    position: fixed;
+    top: 20%;
+    width: 80px;
+    animation: float 4s ease-in-out infinite;
+    z-index: 2;
+    opacity: 0.9;
+}
+
+.floatLeft {
+    left: 10px;
+}
+
+.floatRight {
+    right: 10px;
+}
+
+@keyframes float {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-30px); }
+    100% { transform: translateY(0); }
+}
 </style>
 </head>
 <body>
@@ -140,7 +166,6 @@ button {
     <h1 id="question">Will you be my valentine? 💖</h1>
     <img id="mainImage" src="minion1.gif" alt="Minion">
 
-    <!-- TEKS TYPING -->
     <div id="typingText"></div>
 
     <div class="buttons">
@@ -164,7 +189,7 @@ let clickCount = 0;
 let scale = 1;
 let yesStep = 0;
 
-// LOCK SCROLL
+/* LOCK SCROLL */
 function lockScroll() {
     document.body.style.overflow = "hidden";
     window.addEventListener("wheel", e => e.preventDefault(), { passive: false });
@@ -172,35 +197,27 @@ function lockScroll() {
 }
 lockScroll();
 
-// NO SYSTEM (MAX 5x → HILANG)
+/* NO SYSTEM */
 function reject() {
     if (clickCount < 5) {
-        noBtn.innerText = "No (" + (5 - clickCount - 1) + ")";
         clickCount++;
-
         scale += 0.3;
         yesBtn.style.transform = `scale(${scale})`;
 
+        noBtn.innerText = "No (" + (5 - clickCount) + ")";
         if (clickCount === 5) {
-            setTimeout(() => {
-                noBtn.style.display = "none";
-            }, 300);
+            setTimeout(() => noBtn.style.display = "none", 300);
         }
     }
 }
 
-// TYPING EFFECT
+/* TYPING EFFECT */
 function typeText(text) {
     typingText.innerHTML = "";
     let i = 0;
-    const cursor = document.createElement("span");
-    cursor.className = "cursor";
-    cursor.innerText = "|";
-    typingText.appendChild(cursor);
-
     const interval = setInterval(() => {
         if (i < text.length) {
-            cursor.insertAdjacentText("beforebegin", text.charAt(i));
+            typingText.innerText += text.charAt(i);
             i++;
         } else {
             clearInterval(interval);
@@ -208,7 +225,7 @@ function typeText(text) {
     }, 50);
 }
 
-// YES SYSTEM
+/* YES SYSTEM */
 function finish() {
     yesStep++;
 
@@ -225,37 +242,45 @@ function finish() {
         typeText(texts[2]);
     } 
     else {
-        showCatScreen();
+        showFinalScreen();
     }
 }
 
-// FINAL KUCING
-function showCatScreen() {
+/* FINAL CINEMATIC MODE */
+function showFinalScreen() {
     document.body.style.background = "linear-gradient(135deg, #ff9a9e, #fad0c4)";
     document.body.innerHTML = `
-        <div class="container" style="z-index:2;">
-            <img src="cat1.gif" style="max-width:300px; border-radius:0;">
-            <h1 style="font-size:45px; color:white;">
+        <img src="cat3.gif" class="jumpCat">
+        <img src="cat4.png" class="floatCat floatLeft">
+        <img src="cat4.png" class="floatCat floatRight">
+
+        <div class="container">
+            <img src="cat1.gif" style="max-width:280px; border-radius:0;">
+            <h1 style="font-size:40px; color:white;">
                 YAYYY!!! ❤️
             </h1>
+            <p style="color:white; font-size:18px;">
+                You are my favorite person 💕
+            </p>
         </div>
     `;
+
     startHearts();
 }
 
-// HUJAN HATI
+/* LOVE RAIN */
 function startHearts() {
     setInterval(() => {
         const heart = document.createElement("div");
         heart.className = "heart";
         heart.innerText = "❤️";
         heart.style.left = Math.random() * 100 + "vw";
-        heart.style.fontSize = 20 + Math.random() * 20 + "px";
+        heart.style.fontSize = 16 + Math.random() * 24 + "px";
         heart.style.animationDuration = 2 + Math.random() * 3 + "s";
 
         document.body.appendChild(heart);
         setTimeout(() => heart.remove(), 5000);
-    }, 200);
+    }, 150);
 }
 </script>
 
