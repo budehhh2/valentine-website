@@ -145,7 +145,6 @@ button {
 const yesBtn = document.getElementById("yesBtn");
 const noBtn = document.getElementById("noBtn");
 const typingText = document.getElementById("typingText");
-const mainImage = document.getElementById("mainImage");
 
 const texts = [
     "Are you REALLY sure? 😳",
@@ -256,18 +255,16 @@ function spawnSmallCats() {
         cat.src = "cat4.gif";
         cat.className = "smallCat";
 
-        const size = 40 + Math.random() * 40; // kecil
+        const size = 30 + Math.random() * 30;
         cat.style.width = size + "px";
 
         cat.style.left = 20 + Math.random() * 60 + "vw";
-        cat.style.top = 10 + Math.random() * 25 + "vh";
+        cat.style.top = 5 + Math.random() * 20 + "vh";
 
         document.body.appendChild(cat);
 
-        setTimeout(() => {
-            cat.remove();
-        }, 6000);
-    }, 800);
+        setTimeout(() => cat.remove(), 6000);
+    }, 700);
 }
 </script>
 
