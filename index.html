@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>For You ❤️ </title>
+<title>For You ❤️</title>
 
 <style>
 * {
@@ -14,14 +14,22 @@ body {
     margin: 0;
     min-height: 100vh;
     font-family: 'Arial', sans-serif;
+
+    /* Background animasi */
     background: linear-gradient(-45deg, #ffffff, #ffe6eb, #ffd6e0, #ffffff);
     background-size: 400% 400%;
     animation: bgMove 10s ease infinite;
+
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
+
+    /* KUNCI SCROLL */
     overflow: hidden;
+    overscroll-behavior: none;
+    touch-action: none;
+
     padding: 20px;
 }
 
@@ -73,13 +81,14 @@ button {
     border: none;
     border-radius: 12px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.15s ease;
     width: 100%;
 }
 
 #yesBtn {
     background-color: #a5d6a7;
     font-weight: bold;
+    transition: transform 0.1s ease;
 }
 
 #noBtn {
@@ -132,6 +141,23 @@ const texts = [
 ];
 
 let clickCount = 0;
+let scale = 1;
+
+// LOCK SCROLL HP & PC
+function lockScroll() {
+    document.body.style.overflow = "hidden";
+
+    window.addEventListener("wheel", e => e.preventDefault(), { passive: false });
+    window.addEventListener("touchmove", e => e.preventDefault(), { passive: false });
+    window.addEventListener("keydown", e => {
+        if (["ArrowUp", "ArrowDown", "Space", "PageUp", "PageDown"].includes(e.code)) {
+            e.preventDefault();
+        }
+    });
+}
+
+// Aktifkan saat load
+lockScroll();
 
 function reject() {
     clickCount++;
@@ -142,10 +168,9 @@ function reject() {
         noBtn.innerText = "Please...";
     }
 
-    const currentSize = parseFloat(
-        window.getComputedStyle(yesBtn).fontSize
-    );
-    yesBtn.style.fontSize = `${currentSize * 1.3}px`;
+    // YES membesar instan (HP friendly)
+    scale += 0.3;
+    yesBtn.style.transform = `scale(${scale})`;
 }
 
 function finish() {
