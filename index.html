@@ -59,24 +59,33 @@ img {
     width: 100%;
     max-width: 250px;
     border-radius: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 h1 {
     font-size: 22px;
     color: #333;
-    margin-bottom: 25px;
+    margin-bottom: 10px;
 }
 
-/* TEKS PINDAH KE ATAS GAMBAR */
-#question.fixedTop {
-    position: absolute;
-    top: -60px;   /* FIX NAIK LEBIH KE ATAS */
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-    max-width: 350px;
-    z-index: 10;
+/* Teks typing di bawah gambar */
+#typingText {
+    font-size: 18px;
+    min-height: 24px;
+    color: #444;
+    margin-bottom: 15px;
+}
+
+/* Efek cursor typing */
+.cursor {
+    display: inline-block;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0; }
+    100% { opacity: 1; }
 }
 
 .buttons {
@@ -131,6 +140,9 @@ button {
     <h1 id="question">Will you be my valentine? 💖</h1>
     <img id="mainImage" src="minion1.gif" alt="Minion">
 
+    <!-- TEKS TYPING -->
+    <div id="typingText"></div>
+
     <div class="buttons">
         <button id="yesBtn" onclick="finish()">Yes</button>
         <button id="noBtn" onclick="reject()">No</button>
@@ -140,15 +152,12 @@ button {
 <script>
 const yesBtn = document.getElementById("yesBtn");
 const noBtn = document.getElementById("noBtn");
-const mainImage = document.getElementById("mainImage");
-const question = document.getElementById("question");
+const typingText = document.getElementById("typingText");
 
 const texts = [
-    "Are you sure?",
-    "Really?",
-    "Think again!",
-    "Last chance!",
-    "I'm sad :("
+    "Are you REALLY sure? 😳",
+    "Okay okay... one more time 😏",
+    "Final click... I promise 💖"
 ];
 
 let clickCount = 0;
@@ -166,7 +175,7 @@ lockScroll();
 // NO SYSTEM (MAX 5x → HILANG)
 function reject() {
     if (clickCount < 5) {
-        noBtn.innerText = texts[clickCount];
+        noBtn.innerText = "No (" + (5 - clickCount - 1) + ")";
         clickCount++;
 
         scale += 0.3;
@@ -180,23 +189,40 @@ function reject() {
     }
 }
 
-// YES SYSTEM (TEKS PINDAH POSISI, TIDAK GANTI ISI)
+// TYPING EFFECT
+function typeText(text) {
+    typingText.innerHTML = "";
+    let i = 0;
+    const cursor = document.createElement("span");
+    cursor.className = "cursor";
+    cursor.innerText = "|";
+    typingText.appendChild(cursor);
+
+    const interval = setInterval(() => {
+        if (i < text.length) {
+            cursor.insertAdjacentText("beforebegin", text.charAt(i));
+            i++;
+        } else {
+            clearInterval(interval);
+        }
+    }, 50);
+}
+
+// YES SYSTEM
 function finish() {
     yesStep++;
 
-    // Klik ke-2 dst → teks pindah ke atas gambar
-    if (yesStep >= 2) {
-        question.classList.add("fixedTop");
-    }
-
     if (yesStep === 1) {
         document.body.style.background = "linear-gradient(135deg, #ffe6f0, #ffc2d9)";
+        typeText(texts[0]);
     } 
     else if (yesStep === 2) {
         document.body.style.background = "linear-gradient(135deg, #ffb3c6, #ff8fab)";
+        typeText(texts[1]);
     } 
     else if (yesStep === 3) {
         document.body.style.background = "linear-gradient(135deg, #ff758f, #ff4d6d)";
+        typeText(texts[2]);
     } 
     else {
         showCatScreen();
