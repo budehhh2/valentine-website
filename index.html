@@ -136,8 +136,7 @@ const texts = [
     "Really?",
     "Think again!",
     "Last chance!",
-    "I'm sad :(",
-    "Just click YES!"
+    "I'm sad :("
 ];
 
 let clickCount = 0;
@@ -160,17 +159,21 @@ function lockScroll() {
 lockScroll();
 
 function reject() {
-    clickCount++;
+    if (clickCount < 5) {
+        noBtn.innerText = texts[clickCount];
+        clickCount++;
 
-    if (clickCount <= texts.length) {
-        noBtn.innerText = texts[clickCount - 1];
-    } else {
-        noBtn.innerText = "Please...";
+        // YES membesar instan (HP friendly)
+        scale += 0.3;
+        yesBtn.style.transform = `scale(${scale})`;
+
+        // Klik ke-5 → NO menghilang
+        if (clickCount === 5) {
+            setTimeout(() => {
+                noBtn.style.display = "none";
+            }, 300);
+        }
     }
-
-    // YES membesar instan (HP friendly)
-    scale += 0.3;
-    yesBtn.style.transform = `scale(${scale})`;
 }
 
 function finish() {
