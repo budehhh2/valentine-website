@@ -130,6 +130,8 @@ button {
 <script>
 const yesBtn = document.getElementById("yesBtn");
 const noBtn = document.getElementById("noBtn");
+const mainImage = document.getElementById("mainImage");
+const question = document.getElementById("question");
 
 const texts = [
     "Are you sure?",
@@ -141,6 +143,7 @@ const texts = [
 
 let clickCount = 0;
 let scale = 1;
+let yesStep = 0;
 
 // LOCK SCROLL HP & PC
 function lockScroll() {
@@ -158,12 +161,13 @@ function lockScroll() {
 // Aktifkan saat load
 lockScroll();
 
+// SISTEM NO (MAX 5x → HILANG)
 function reject() {
     if (clickCount < 5) {
         noBtn.innerText = texts[clickCount];
         clickCount++;
 
-        // YES membesar instan (HP friendly)
+        // YES membesar instan
         scale += 0.3;
         yesBtn.style.transform = `scale(${scale})`;
 
@@ -176,11 +180,37 @@ function reject() {
     }
 }
 
+// SISTEM YES BERTAHAP
 function finish() {
+    yesStep++;
+
+    // Step 1–3: Ganti suasana dulu
+    if (yesStep === 1) {
+        document.body.style.background = "linear-gradient(135deg, #ffe6f0, #ffc2d9)";
+        mainImage.src = "minion1.gif";
+        question.innerText = "Are you REALLY sure? 😳";
+    } 
+    else if (yesStep === 2) {
+        document.body.style.background = "linear-gradient(135deg, #ffb3c6, #ff8fab)";
+        question.innerText = "Okay okay... one more time 😏";
+    } 
+    else if (yesStep === 3) {
+        document.body.style.background = "linear-gradient(135deg, #ff758f, #ff4d6d)";
+        question.innerText = "Final click... I promise 💖";
+    } 
+    // Step 4: Masuk ke kucing
+    else {
+        showCatScreen();
+    }
+}
+
+// LAYAR AKHIR KUCING (TANPA KOTAK PUTIH)
+function showCatScreen() {
     document.body.style.background = "linear-gradient(135deg, #ff9a9e, #fad0c4)";
     document.body.innerHTML = `
         <div class="container" style="z-index:2;">
-            <img src="cat1.gif" style="max-width:300px;">
+            <img src="cat1.gif" 
+                 style="max-width:300px; border-radius:0; background:transparent;">
             <h1 style="font-size: 45px; color: white;">
                 YAYYY!!! ❤️
             </h1>
@@ -190,6 +220,7 @@ function finish() {
     startHearts();
 }
 
+// HUJAN HATI
 function startHearts() {
     setInterval(() => {
         const heart = document.createElement("div");
